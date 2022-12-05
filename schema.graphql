@@ -1,13 +1,3 @@
-type TokenTransfer @entity {
-  id: ID!
-  txHash: Bytes!
-  blockNumber: Int!
-  timestamp: Int!
-  to: User!
-  from: User!
-  amount: BigInt!
-}
-
 type Stake @entity {
   id: ID!
   txHash: Bytes!
@@ -17,17 +7,7 @@ type Stake @entity {
   amount: BigInt!
 }
 
-type Cooldown @entity {
-  id: ID!
-  txHash: Bytes!
-  blockNumber: Int!
-  timestamp: Int!
-  user: User!
-  amount: BigInt!
-  cooldownTimestamp: Int!
-}
-
-type Redeem @entity {
+type Withdrawn @entity {
   id: ID!
   txHash: Bytes!
   blockNumber: Int!
