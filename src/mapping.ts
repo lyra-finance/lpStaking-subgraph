@@ -25,21 +25,24 @@ function loadOrCreateUser(userAddress: string): User {
 
 export function handleWithdrawn(event: WithdrawnEvent): void {
   let userAddress = event.params.user.toHex();
-  loadOrCreateUser(userAddress);
-  let redeem = new Withdrawn(
+  let user = loadOrCreateUser(userAddress);
+  let withdrawn = new Withdrawn(
     event.transaction.hash.toHex() + event.logIndex.toString()
   );
-  redeem.txHash = event.transaction.hash;
-  redeem.blockNumber = event.block.number.toI32();
-  redeem.timestamp = event.block.timestamp.toI32();
-  redeem.user = userAddress;
-  redeem.amount = event.params.amount;
-  redeem.save();
+  withdrawn.txHash = event.transaction.hash;
+  withdrawn.blockNumber = event.block.number.toI32();
+  withdrawn.timestamp = event.block.timestamp.toI32();
+  withdrawn.user = userAddress;
+  withdrawn.amount = event.params.amount;
+  withdrawn.save();
+
+  user.balance = user.balance.minus(event.params.amount)
+  user.save()
 }
 
 export function handleStaked(event: Staked): void {
   let userAddress = event.params.user.toHex();
-  loadOrCreateUser(userAddress);
+  let user = loadOrCreateUser(userAddress);
   let stake = new Stake(
     event.transaction.hash.toHex() + event.logIndex.toString()
   );
@@ -49,4 +52,7 @@ export function handleStaked(event: Staked): void {
   stake.user = userAddress;
   stake.amount = event.params.amount;
   stake.save();
+
+  user.balance = user.balance.plus(event.params.amount)
+  user.save()
 }
